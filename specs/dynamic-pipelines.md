@@ -36,7 +36,7 @@ Where each key in the `config_source` mapping is a plugin used in the schedule a
 > TBD: how to reference a _pipeline_ instead of a plain tap, in case a mapper is required, for example.
 
 > [!NOTE]
-> TBD: do we want to support config sources for loaders too? If so, how could we ensure bot collections of configs have the same cardinality and order?
+> TBD: do we want to support config sources for loaders too? If so, how could we ensure both collections of configs have the same cardinality and order?
 
 ## Under the hood
 
