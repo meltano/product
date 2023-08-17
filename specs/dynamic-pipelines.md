@@ -1,5 +1,38 @@
 # Dynamically create N number of pipelines from Singer output
 
+## Problem
+
+Singer taps are designed to be used in a single pipeline, with a single configuration. However, there are cases where a single tap can be used to extract data from different instances of the same type of source. There are two ways to achieve this today:
+
+1. Use a single plugin, and pass different configurations to it at runtime:
+
+   ```sh
+    # Set env vars for the tap
+    export TAP_POSTGRES_HOST=...
+    export TAP_POSTGRES_PORT=...
+    export TAP_POSTGRES_USER=...
+    export TAP_POSTGRES_PASSWORD=...
+    export TAP_POSTGRES_DATABASE=...
+    # Run the tap
+    meltano run tap-postgres target-snowflake
+    ```
+
+   This process can be automated by using a Secret Ops provider like [Infisical](https://github.com/Infisical/infisical) or [chamber](https://github.com/segmentio/chamber) or writing a script that generates the required env vars for each configuration.
+
+2. Use inheritance to create a new plugin for each configuration:
+
+   ```yaml
+   plugins:
+    extractors:
+    - name: tap-postgres
+    - name: tap-postgres--tenant1
+      inherit_from: tap-postgres
+    - name: tap-postgres--tenant2
+      inherit_from: tap-postgres
+   ```
+
+   This approach does not scales to 100s or 1000s of instances, as it requires a new plugin to be created for each configuration.
+
 ## `meltano.yml`
 
 ```yaml
